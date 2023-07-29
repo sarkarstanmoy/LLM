@@ -13,43 +13,36 @@ using System.Collections;
 using System.Threading.Channels;
 using UglyToad.PdfPig.Geometry;
 using Docnet.Core.Models;
+using System.ComponentModel;
 
 namespace FirstSK.Plugins
 {
     public class PDFReaderPlugin
     {
-        private const string fileName = "brian-markup.pdf";
+        private const string fileName = "resume.pdf";
 
-        [SKFunction("Read pdf")]
-        public void PDFReader()
+        [SKFunction, Description("Read pdf")]
+        public string PDFReader()
         {
             //var docNet = Docnet.Core.DocLib.Instance;
             //var docReader = docNet.GetDocReader($"./{fileName}",);
             //Console.WriteLine(docReader.GetPageReader(0).GetText());
 
             var pdfDirectory = Path.Combine(Directory.GetCurrentDirectory(), fileName);
-            int count = 1;
             StringBuilder stringBuilder = new StringBuilder();
             using (PdfDocument document = PdfDocument.Open(pdfDirectory))
             {
-                var page = document.GetPage(1);
-
-                var content = page.GetMarkedContents();
-                //foreach (Page page in document.GetPages())
-                //{
-                //    if (count > 2)
-                //    {
-                //        break;
-                //    }
-                //    var r = page.ExperimentalAccess.GetAnnotations();
-
-                //    //var summerizeSkill = kernel.Skills.GetFunction("SummarizePlugin", "Summarize");
-                //    //var sresult = await summerizeSkill.InvokeAsync(pageText);
-                //    //Console.WriteLine();
-                //    //await Console.Out.WriteLineAsync($"OpenAI Token used : {GetToken(page.GetWords().Count())}");
-                //    //await Console.Out.WriteLineAsync(sresult.Result);
-                //}
+                foreach (Page page in document.GetPages())
+                {
+                    stringBuilder.Append(page.Text);
+                    //var summerizeSkill = kernel.Skills.GetFunction("SummarizePlugin", "Summarize");
+                    //var sresult = await summerizeSkill.InvokeAsync(pageText);
+                    //Console.WriteLine();
+                    //await Console.Out.WriteLineAsync($"OpenAI Token used : {GetToken(page.GetWords().Count())}");
+                    //await Console.Out.WriteLineAsync(sresult.Result);
+                }
             }
+            return stringBuilder.ToString();
         }
 
         private int GetToken(int numberOfWords)

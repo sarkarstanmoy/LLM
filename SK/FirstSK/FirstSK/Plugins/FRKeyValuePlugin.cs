@@ -10,21 +10,21 @@ using Microsoft.SemanticKernel.Orchestration;
 using Azure.Identity;
 using Newtonsoft.Json;
 using Azure.Core.Serialization;
+using System.ComponentModel;
 
 namespace FirstSK.Plugins
 {
-    public class FRPlugin
+    public sealed class FRKeyValuePlugin
     {
-        [SKFunction("Takes document and extract data using prebuild model")]
-        [SKFunctionContextParameter(Name = "endpoint", Description = "FR endpoint")]
-        [SKFunctionContextParameter(Name = "fileUri", Description = "File path")]
-        [SKFunctionContextParameter(Name = "apiKey", Description = "API Key")]
-        public async Task ExtractDocument(SKContext context)
+        [SKFunction, Description("Form recognizer extract key-value data using prebuild model: prebuilt-document")]
+        public async Task<string> ExtractDocument(SKContext context, [Description("FR endpoint")] string endpoint,
+                                                     [Description("FR API Key")] string apiKey)
         {
-            var credential = new AzureKeyCredential(context["apiKey"]);
-            var client = new DocumentAnalysisClient(new Uri(context["endpoint"]), credential);
+            var credential = new AzureKeyCredential(apiKey);
+            var client = new DocumentAnalysisClient(new Uri(endpoint), credential);
 
-            byte[] file = File.ReadAllBytes(context["fileUri"]);
+            // byte[] file = File.ReadAllBytes(fileUri);
+            byte[] file = Encoding.ASCII.GetBytes(context["Input"]);
             AnalyzeDocumentOperation operation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, "prebuilt-document", new MemoryStream(file));
             AnalyzeResult result = operation.Value;
             List<KeyValuePairs> keyValuePairs = new List<KeyValuePairs>();
@@ -38,7 +38,7 @@ namespace FirstSK.Plugins
                 });
             }
 
-            // context["$input"] = keyValuePairs;
+            return JsonConvert.SerializeObject(keyValuePairs);
         }
     }
 

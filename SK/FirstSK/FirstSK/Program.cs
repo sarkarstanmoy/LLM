@@ -10,6 +10,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Memory.Chroma;
 using Microsoft.SemanticKernel.Memory;
 using Microsoft.SemanticKernel.Orchestration;
+using Microsoft.SemanticKernel.Planning;
 using Microsoft.SemanticKernel.SkillDefinition;
 using Microsoft.SemanticKernel.Skills.Core;
 using Plugins;
@@ -25,7 +26,7 @@ var myLogger = LoggerFactory.Create(builder =>
 
 IKernel kernel = Kernel.Builder
     .WithLogger(myLogger)
-
+.WithAIService
     //.WithAzureTextEmbeddingGenerationService("deployment-text-davinci-003", "https://openai06072023.openai.azure.com/", "afbff89107e24b6a9cddc9e3db81b523")
     .WithAzureTextCompletionService("deployment-text-davinci-003", "https://openai06072023.openai.azure.com/", "afbff89107e24b6a9cddc9e3db81b523")
     //.WithOpenAITextEmbeddingGenerationService("text-embedding-ada-002", "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")
@@ -50,18 +51,25 @@ var pluginsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Plugins");
 
 //**** FormRecognizer
 
-var FRPlugin = new FRPlugin();
-var FRSkill = kernel.ImportSkill(FRPlugin, "FRreader");
-var HLSPlugin = kernel
-.ImportSemanticSkillFromDirectory(pluginsDirectory, "HLSPlugin");
+//var FRPlugin = new FRKeyValuePlugin();
+//var FRSkill = kernel.ImportSkill(FRPlugin, "FRreader");
 
-//var variables = new ContextVariables();
-//variables.Set("fileUri", "C:\\Learnings\\Semantic Kernel\\FirstSK\\FirstSK\\brain2.pdf");
-//variables.Set("endpoint", "https://hls-dip-dev-fr.cognitiveservices.azure.com/");
-//variables.Set("apiKey", "5cf0ba909bb140658481e2b77aec54ea");
+PDFReaderPlugin pDFReaderPlugin = new();
+var PDFReaderSkill = kernel.ImportSkill(pDFReaderPlugin, "pDFReaderPlugin");
+//var HLSPlugin = kernel
+//.ImportSemanticSkillFromDirectory(pluginsDirectory, "HLSPlugin");
 
-//var context = await kernel.RunAsync(variables, FRSkill["ExtractDocument"]);
-//Console.WriteLine(context);
+var variables = new ContextVariables();
+//variables.Set("fileUri", Getcurre);
+variables.Set("endpoint", "https://hls-dip-dev-fr.cognitiveservices.azure.com/");
+variables.Set("apiKey", "5cf0ba909bb140658481e2b77aec54ea");
+
+//var context = await kernel.RunAsync(variables, PDFReaderSkill["PDFReader"], FRSkill["ExtractDocument"]);
+//Console.WriteLine(context["Input"]);
+
+var planner = new SequentialPlanner(kernel);
+var result = await planner.CreatePlanAsync("Summarize content");
+Console.WriteLine("Plan results:");
 
 //****End FormRecognizer
 
@@ -71,10 +79,10 @@ var HLSPlugin = kernel
 //var summerizePlugin = kernel
 //.ImportSemanticSkillFromDirectory(pluginsDirectory, "SummarizePlugin");
 
-PDFReaderPlugin pDFReaderPlugin = new();
-var PDFReaderSkill = kernel.ImportSkill(pDFReaderPlugin, "pDFReaderPlugin");
-var context = await kernel.RunAsync(PDFReaderSkill["PDFReader"]);
-Console.WriteLine(context);
+//PDFReaderPlugin pDFReaderPlugin = new();
+//var PDFReaderSkill = kernel.ImportSkill(pDFReaderPlugin, "pDFReaderPlugin");
+//var context = await kernel.RunAsync(PDFReaderSkill["PDFReader"]);
+//Console.WriteLine(context);
 
 // Create a new context and set the input, history, and options variables.
 //var context = kernel.CreateNewContext();

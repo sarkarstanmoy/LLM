@@ -1,6 +1,7 @@
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
 using Microsoft.SemanticKernel.SkillDefinition;
+using System.ComponentModel;
 
 namespace Plugins;
 
@@ -13,7 +14,7 @@ public class OrchestratorPlugin
         _kernel = kernel;
     }
 
-    [SKFunction("Routes the request to the appropriate function.")]
+    [SKFunction, Description("Routes the request to the appropriate function.")]
     public async Task<string> RouteRequest(SKContext context)
     {
         // Save the original user request
