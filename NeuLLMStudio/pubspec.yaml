@@ -39,6 +39,7 @@ dependencies:
   flutter_adaptive_scaffold: ^0.1.7
   get: ^4.6.5
   dio: ^5.3.2
+  animated_text_kit: ^4.2.2
 
 dev_dependencies:
   flutter_test:

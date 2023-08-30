@@ -46,7 +46,11 @@ async def llmResponse(prompt):
         yield response.delta
 
 
-@app.get("/prompt/{prompt}")
-def read_root(prompt):
+@app.get("/prompt/stream/{prompt}")
+def read_stream_async(prompt):
     return StreamingResponse(llmResponse(prompt),media_type='text/event-stream')  # type: ignore
 
+
+@app.get("/prompt/{prompt}")
+def read_sync(prompt):
+    return llm.complete(prompt).text; 
