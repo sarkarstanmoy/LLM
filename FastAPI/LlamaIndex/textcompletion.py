@@ -2,9 +2,9 @@ from llama_index.llms import LlamaCPP
 from llama_index.llms.llama_utils import messages_to_prompt, completion_to_prompt
 
 llm = LlamaCPP(
-    
+    model_url="https://huggingface.co/TheBloke/Llama-2-13B-chat-GGML/resolve/main/llama-2-13b-chat.ggmlv3.q4_0.bin",
     # optionally, you can set the path to a pre-downloaded model instead of model_url
-    model_path='./models/llama-2-7b-chat.ggmlv3.q2_K.bin',
+    model_path=None,
     temperature=0.1,
     max_new_tokens=256,
     # llama2 has a context window of 4096 tokens, but we set it lower to allow for some wiggle room
@@ -17,5 +17,5 @@ llm = LlamaCPP(
     # transform inputs into Llama2 format
     messages_to_prompt=messages_to_prompt,
     completion_to_prompt=completion_to_prompt,
-    verbose=False,
+    verbose=True,
 )

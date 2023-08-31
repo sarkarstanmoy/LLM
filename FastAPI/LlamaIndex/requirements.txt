@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+gunicorn
+jinja2
+python-multipart
+llama-cpp-python==0.1.78
+llama-index

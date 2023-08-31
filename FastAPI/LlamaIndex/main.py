@@ -22,6 +22,7 @@ app.add_middleware(
 
 llm = LlamaCPP(
     
+    #model_url="https://huggingface.co/TheBloke/Llama-2-13B-chat-GGML/resolve/main/llama-2-13b-chat.ggmlv3.q4_0.bin",
     # optionally, you can set the path to a pre-downloaded model instead of model_url
     model_path='./models/llama-2-7b-chat.ggmlv3.q2_K.bin',
     temperature=0.1,
