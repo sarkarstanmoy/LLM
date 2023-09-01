@@ -1,6 +1,6 @@
 from typing import Union
 
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from llama_index.llms import LlamaCPP
@@ -45,6 +45,19 @@ async def llmResponse(prompt):
     for response in response_iter:
         print(response.delta, end="", flush=True)
         yield response.delta
+
+
+@app.websocket("/chat")
+async def read_stream_websocket(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        prompt = await websocket.receive_text()
+        response_iter = llm.stream_complete(prompt)
+        for response in response_iter:
+            print(response.delta, end="", flush=True)
+            await websocket.send_text(repr(response.delta))
+
+
 
 
 @app.get("/prompt/stream/{prompt}")
