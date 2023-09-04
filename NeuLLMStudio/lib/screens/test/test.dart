@@ -1,15 +1,7 @@
-import 'dart:async';
-import 'dart:js_interop';
-import 'dart:typed_data';
 
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:neu_llm_studio/common/common.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-
 import '../../common/prompt_model.dart';
-import '../../infrastructure/llama_provider.dart';
 
 class Test extends StatefulWidget {
   const Test({super.key});
@@ -32,7 +24,6 @@ class _TestState extends State<Test> {
     var size = MediaQuery.of(context).size;
     final promptController = TextEditingController();
     return Scaffold(
-      appBar: Common().CustomAppBar(),
       body: SafeArea(
         child: Column(
           children: [

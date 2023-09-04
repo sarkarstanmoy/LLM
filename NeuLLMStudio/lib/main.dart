@@ -20,7 +20,10 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: CustomTheme().buildLightTheme(),
-      darkTheme: CustomTheme().buildDarkTheme(),
+      darkTheme: CustomTheme().buildDarkTheme().copyWith(navigationRailTheme: NavigationRailThemeData(
+        elevation: 10,
+        groupAlignment: 0.0
+      )),
       home: const Home(),
       debugShowCheckedModeBanner: false,
     );

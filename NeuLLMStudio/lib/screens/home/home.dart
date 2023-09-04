@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:neu_llm_studio/common/common.dart';
 import 'package:neu_llm_studio/screens/offline/offline.dart';
 import 'package:neu_llm_studio/screens/test/test.dart';
 
@@ -18,36 +19,41 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return AdaptiveScaffold(
-        useDrawer: false,
+      useDrawer: false,
+        appBar: Common().CustomAppBar(),
+        appBarBreakpoint: Breakpoints.small,
         selectedIndex: _selectedTab,
         onSelectedIndexChange: (int index) {
           setState(() {
             _selectedTab = index;
           });
         },
+
+        leadingExtendedNavRail: Text("NeuLLMStudio"),
+        leadingUnextendedNavRail: Text("NeuLLM"),
         destinations: [
           NavigationDestination(
-            icon: Icon(Icons.bolt_outlined),
-            selectedIcon: InkWell(child: Icon(Icons.bolt),onTap: (){ Get.to(Test());},),
+            icon: const Icon(Icons.electric_bolt_outlined,),
+            selectedIcon: InkWell(child: const Icon(Icons.electric_bolt),onTap: (){ Get.to(const Test());},),
             label: 'Test',
           ),
           NavigationDestination(
-            icon: Icon(Icons.offline_share_outlined),
-            selectedIcon: InkWell(child: Icon(Icons.offline_share,),onTap: (){Get.to(Offline());},),
+            icon: const Icon(Icons.offline_share_outlined),
+            selectedIcon: InkWell(child: const Icon(Icons.offline_share,),onTap: (){Get.to(const Offline());},),
             label: 'Offline',
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings_outlined),
+            selectedIcon: InkWell(child: const Icon(Icons.settings,),onTap: (){Get.to(const Offline());},),
             label: 'Settings',
           ),
         ],
 
       body: (context) {
         if(_selectedTab ==0){
-          return Test();
+          return const Test();
         } else if (_selectedTab ==1){
-          return Offline();
+          return const Offline();
         } else {
           return Container();
         }
