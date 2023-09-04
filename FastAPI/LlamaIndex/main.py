@@ -22,9 +22,9 @@ app.add_middleware(
 
 llm = LlamaCPP(
     
-    #model_url="https://huggingface.co/TheBloke/Llama-2-13B-chat-GGML/resolve/main/llama-2-13b-chat.ggmlv3.q4_0.bin",
+    model_url="https://huggingface.co/TheBloke/CodeLlama-7B-Instruct-GGUF/resolve/main/codellama-7b-instruct.Q2_K.gguf",
     # optionally, you can set the path to a pre-downloaded model instead of model_url
-    model_path='./models/llama-2-7b-chat.ggmlv3.q2_K.bin',
+    #model_path='./models/llama-2-7b-chat.ggmlv3.q2_K.bin',
     temperature=0.1,
     max_new_tokens=256,
     # llama2 has a context window of 4096 tokens, but we set it lower to allow for some wiggle room
@@ -68,3 +68,7 @@ def read_stream_async(prompt):
 @app.get("/prompt/{prompt}")
 def read_sync(prompt):
     return llm.complete(prompt).text; 
+
+@app.post("/chat/stop")
+def stop():
+    return llm.complete("stop")

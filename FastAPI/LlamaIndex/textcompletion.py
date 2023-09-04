@@ -2,7 +2,7 @@ from llama_index.llms import LlamaCPP
 from llama_index.llms.llama_utils import messages_to_prompt, completion_to_prompt
 
 llm = LlamaCPP(
-    model_url="https://huggingface.co/TheBloke/Llama-2-13B-chat-GGML/resolve/main/llama-2-13b-chat.ggmlv3.q4_0.bin",
+    model_url="https://huggingface.co/TheBloke/CodeLlama-7B-Instruct-GGUF/resolve/main/codellama-7b-instruct.Q2_K.gguf",
     # optionally, you can set the path to a pre-downloaded model instead of model_url
     model_path=None,
     temperature=0.1,
@@ -19,3 +19,5 @@ llm = LlamaCPP(
     completion_to_prompt=completion_to_prompt,
     verbose=True,
 )
+
+print(llm.complete("tell me about yourself?").text)
