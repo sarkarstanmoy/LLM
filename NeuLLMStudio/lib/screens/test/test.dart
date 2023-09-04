@@ -51,27 +51,26 @@ class _TestState extends State<Test> {
                   },
                   itemCount: prompts.length),
             ),
-            Expanded(
-                child: prompts.isEmpty
-                    ? Text("Ask Question?")
-                    : StreamBuilder(
-                        stream: _channel.stream,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            prompts.last.answer =
-                                prompts.last.answer + snapshot.data;
-                            prompts.last.answer = prompts.last.answer
-                                .replaceAll("''", "")
-                                .replaceAll("\\n", "\n");
-                          }
-                          return Expanded(
-                            child: Center(
-                                child: SingleChildScrollView(
-                                    child: Text(prompts.last.answer,
-                                        maxLines: 100))),
-                          );
-                        },
-                      )),
+            prompts.isEmpty
+                ? Text("Ask Question?")
+                : StreamBuilder(
+                    stream: _channel.stream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        prompts.last.answer =
+                            prompts.last.answer + snapshot.data;
+                        prompts.last.answer = prompts.last.answer
+                            .replaceAll("''", "")
+                            .replaceAll("\\n", "\n");
+                      }
+                      return Expanded(
+                        child: Center(
+                            child: SingleChildScrollView(
+                                child: Text(prompts.last.answer,
+                                    maxLines: 100))),
+                      );
+                    },
+                  ),
             showLoading ? const CircularProgressIndicator() : Container(),
             showStop
                 ? ElevatedButton(
