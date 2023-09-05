@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../../common/prompt_model.dart';
@@ -12,7 +14,7 @@ class Test extends StatefulWidget {
 
 class _TestState extends State<Test> {
   final List<PromptModel> prompts = <PromptModel>[];
-
+  final streamController = StreamController();
   var showLoading = false;
   var showStop = false;
   var _channel = WebSocketChannel.connect(
@@ -29,10 +31,12 @@ class _TestState extends State<Test> {
           children: [
             Expanded(
               child: ListView.separated(
+                reverse: true,
+
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text("Prompt: ${prompts[index].question}",
-                          maxLines: 100),
+                          maxLines: 100,),
                       subtitle:
                           Text("LLM: ${prompts[index].answer}", maxLines: 100),
                     );
@@ -40,7 +44,7 @@ class _TestState extends State<Test> {
                   separatorBuilder: (context, index) {
                     return Divider();
                   },
-                  itemCount: prompts.length),
+                  itemCount: prompts.length-1 < 0 ? 0 : prompts.length-1),
             ),
             prompts.isEmpty
                 ? Text("Ask Question?")
@@ -50,15 +54,23 @@ class _TestState extends State<Test> {
                       if (snapshot.hasData) {
                         prompts.last.answer =
                             prompts.last.answer + snapshot.data;
-                        prompts.last.answer = prompts.last.answer
+                        streamController.add(prompts.last.answer
                             .replaceAll("''", "")
-                            .replaceAll("\\n", "\n");
+                            .replaceAll("\\n", "\n"));
+                          prompts.last.answer = prompts.last.answer
+                              .replaceAll("''", "")
+                              .replaceAll("\\n", "\n");
+
                       }
                       return Expanded(
                         child: Center(
                             child: SingleChildScrollView(
-                                child: Text(prompts.last.answer,
-                                    maxLines: 100))),
+                                child: ListTile(
+                                  title: Text("Prompt: ${prompts.last.question}",
+                                      maxLines: 100),
+                                  subtitle:
+                                  Text("LLM: ${prompts.last.answer}", maxLines: 100),
+                                ))),
                       );
                     },
                   ),
