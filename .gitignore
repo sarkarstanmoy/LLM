@@ -336,3 +336,8 @@ doc/api/
 
 #.flutter-plugins
 #.flutter-plugins-dependencies
+DotNet/Llamacpp/.vs/
+DotNet/Llamacpp/Llamacpp/bin/Debug/
+DotNet/Llamacpp/Llamacpp/obj/
+DotNet/Llamacpp/LLamaCppTest/bin/
+DotNet/Llamacpp/LLamaCppTest/obj/

@@ -4,9 +4,17 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using FirstSK.Plugins;
+using LLama.Common;
+using LLama;
+using LLamaSharp.SemanticKernel.ChatCompletion;
+using LLamaSharp.SemanticKernel.TextCompletion;
+using LLamaSharp.SemanticKernel.TextEmbedding;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.AI.ChatCompletion;
+using Microsoft.SemanticKernel.AI.Embeddings;
+using Microsoft.SemanticKernel.AI.TextCompletion;
 using Microsoft.SemanticKernel.Connectors.Memory.Chroma;
 using Microsoft.SemanticKernel.Memory;
 using Microsoft.SemanticKernel.Orchestration;
@@ -23,16 +31,19 @@ var myLogger = LoggerFactory.Create(builder =>
 }).CreateLogger("Information");
 
 //var memoryStore = new ChromaMemoryStore("http://localhost:8000/");
+string modelPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "huggingface\\gguf\\models\\codellama-7b-instruct.Q2_K.gguf"); // change it to your own model path
+var lLamaWeights = LLamaWeights.LoadFromFile(new ModelParams(modelPath));
+var context = lLamaWeights.CreateContext(new ModelParams(modelPath, contextSize: 1024, seed: 1337, gpuLayerCount: 1));
+// Initialize a chat session
+var ex = new InteractiveExecutor(context);
 
 IKernel kernel = Kernel.Builder
-    .WithLogger(myLogger)
-.WithAIService
-    //.WithAzureTextEmbeddingGenerationService("deployment-text-davinci-003", "https://openai06072023.openai.azure.com/", "afbff89107e24b6a9cddc9e3db81b523")
-    .WithAzureTextCompletionService("deployment-text-davinci-003", "https://openai06072023.openai.azure.com/", "afbff89107e24b6a9cddc9e3db81b523")
-    //.WithOpenAITextEmbeddingGenerationService("text-embedding-ada-002", "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")
+    .WithAIService<IChatCompletion>("llama_chat_completion", new LLamaSharpChatCompletion(ex))
+    .WithAIService<ITextCompletion>("llama_text_completion", new LLamaSharpTextCompletion(ex)).Build();
+    //.WithAIService<ITextEmbeddingGeneration>("llama_text_embedding", new LLamaSharpEmbeddingGeneration(ex)
     //.WithMemoryStorage(memoryStore)
     //.WithChromaMemoryStore(endpoint) // This method offers an alternative approach to registering Chroma memory store.
-    .Build();
+    
 
 //kernel.Log.LogInformation("this is from logger");
 
@@ -42,36 +53,14 @@ IKernel kernel = Kernel.Builder
 
 var pluginsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Plugins");
 
-//var pdfReaderPlugin = kernel.ImportSkill(new PDFReaderPlugin(kernel), "PDFReader");
-//kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "SummarizePlugin");
+var pdfReaderPlugin = kernel.ImportSkill(new PDFReaderPlugin(), "PDFReader");
+kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "SummarizePlugin");
 
-//await kernel.RunAsync(pdfReaderPlugin["PDFReader"]);
+await kernel.RunAsync(pdfReaderPlugin["PDFReader"]);
 
 //******End Summerization
 
-//**** FormRecognizer
 
-//var FRPlugin = new FRKeyValuePlugin();
-//var FRSkill = kernel.ImportSkill(FRPlugin, "FRreader");
-
-PDFReaderPlugin pDFReaderPlugin = new();
-var PDFReaderSkill = kernel.ImportSkill(pDFReaderPlugin, "pDFReaderPlugin");
-//var HLSPlugin = kernel
-//.ImportSemanticSkillFromDirectory(pluginsDirectory, "HLSPlugin");
-
-var variables = new ContextVariables();
-//variables.Set("fileUri", Getcurre);
-variables.Set("endpoint", "https://hls-dip-dev-fr.cognitiveservices.azure.com/");
-variables.Set("apiKey", "5cf0ba909bb140658481e2b77aec54ea");
-
-//var context = await kernel.RunAsync(variables, PDFReaderSkill["PDFReader"], FRSkill["ExtractDocument"]);
-//Console.WriteLine(context["Input"]);
-
-var planner = new SequentialPlanner(kernel);
-var result = await planner.CreatePlanAsync("Summarize content");
-Console.WriteLine("Plan results:");
-
-//****End FormRecognizer
 
 // // Import the OrchestratorPlugin from the plugins directory.
 //var orchestratorPlugin = kernel

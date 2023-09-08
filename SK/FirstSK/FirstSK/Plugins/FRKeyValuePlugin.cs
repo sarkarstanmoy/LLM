@@ -1,5 +1,4 @@
-﻿using Azure.AI.FormRecognizer.DocumentAnalysis;
-using Azure;
+﻿using Azure;
 using Microsoft.SemanticKernel.SkillDefinition;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel.Orchestration;
-using Azure.Identity;
 using Newtonsoft.Json;
 using Azure.Core.Serialization;
 using System.ComponentModel;
@@ -20,25 +18,26 @@ namespace FirstSK.Plugins
         public async Task<string> ExtractDocument(SKContext context, [Description("FR endpoint")] string endpoint,
                                                      [Description("FR API Key")] string apiKey)
         {
-            var credential = new AzureKeyCredential(apiKey);
-            var client = new DocumentAnalysisClient(new Uri(endpoint), credential);
+            //var credential = new AzureKeyCredential(apiKey);
+            //var client = new DocumentAnalysisClient(new Uri(endpoint), credential);
 
-            // byte[] file = File.ReadAllBytes(fileUri);
-            byte[] file = Encoding.ASCII.GetBytes(context["Input"]);
-            AnalyzeDocumentOperation operation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, "prebuilt-document", new MemoryStream(file));
-            AnalyzeResult result = operation.Value;
-            List<KeyValuePairs> keyValuePairs = new List<KeyValuePairs>();
+            //// byte[] file = File.ReadAllBytes(fileUri);
+            //byte[] file = Encoding.ASCII.GetBytes(context["Input"]);
+            //AnalyzeDocumentOperation operation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, "prebuilt-document", new MemoryStream(file));
+            //AnalyzeResult result = operation.Value;
+            //List<KeyValuePairs> keyValuePairs = new List<KeyValuePairs>();
 
-            foreach (var page in result.KeyValuePairs)
-            {
-                keyValuePairs.Add(new KeyValuePairs()
-                {
-                    Key = page.Key?.Content,
-                    Value = page.Value?.Content
-                });
-            }
+            //foreach (var page in result.KeyValuePairs)
+            //{
+            //    keyValuePairs.Add(new KeyValuePairs()
+            //    {
+            //        Key = page.Key?.Content,
+            //        Value = page.Value?.Content
+            //    });
+            //}
 
-            return JsonConvert.SerializeObject(keyValuePairs);
+            // return JsonConvert.SerializeObject(keyValuePairs);
+            return String.Empty;
         }
     }
 

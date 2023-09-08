@@ -42,6 +42,7 @@ namespace FirstSK.Plugins
                     //await Console.Out.WriteLineAsync(sresult.Result);
                 }
             }
+            Console.WriteLine(stringBuilder.ToString());
             return stringBuilder.ToString();
         }
 

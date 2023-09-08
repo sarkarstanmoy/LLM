@@ -8,15 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.AI.FormRecognizer" Version="4.0.0" />
-    <PackageReference Include="Azure.Identity" Version="1.9.0" />
     <PackageReference Include="Docnet.Core" Version="2.3.1" />
+    <PackageReference Include="LLamaSharp.Backend.Cpu" Version="0.5.1" />
+    <PackageReference Include="LLamaSharp.semantic-kernel" Version="0.5.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
-    <PackageReference Include="Microsoft.SemanticKernel" Version="0.17.230718.1-preview" />
-    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Memory.Chroma" Version="0.17.230711.7-preview" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="0.23.230906.2-preview" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Memory.Chroma" Version="0.23.230906.2-preview" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="PdfPig" Version="0.1.8" />
+    <PackageReference Include="PdfPig" Version="0.1.9-alpha-20230827-ee756" />
   </ItemGroup>
 
   <ItemGroup>
