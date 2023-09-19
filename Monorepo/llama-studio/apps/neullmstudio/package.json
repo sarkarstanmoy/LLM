@@ -12,8 +12,8 @@
   "homepage": "",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "flutter run -d windows",
-    "build": "",
+    "dev": "flutter run -d chrome",
+    "build": "flutter build web",
     "lint": "echo TODO",
     "test": "flutter test lib"
   },
